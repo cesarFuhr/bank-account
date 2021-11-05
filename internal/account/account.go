@@ -2,10 +2,10 @@ package account
 
 const (
 	// OperationDeposito é o código da operacao deposito.
-	OperationDeposito = iota
+	OperationDeposito = "DEPOSITO"
 
 	// OperationSaque é o código da operacao saque.
-	OperationSaque
+	OperationSaque = "SAQUE"
 )
 
 // Account é uma conta bancária.
@@ -63,6 +63,6 @@ func (a *Account) Extrato() []Operation {
 
 // Operation é um registro de uma operacao que altere saldo na conta.
 type Operation struct {
-	Code  uint
+	Code  string
 	Valor float64
 }
