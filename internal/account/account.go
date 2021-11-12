@@ -16,6 +16,11 @@ type Account struct {
 	operations []Operation
 }
 
+// Bank e um conjunto de contas.
+type Bank struct {
+	repo InMemoryRepository
+}
+
 // New cria uma nova conta.
 func New(id uint, owner string) *Account {
 	a := Account{
@@ -28,12 +33,14 @@ func New(id uint, owner string) *Account {
 }
 
 // Saldo retorna o saldo atual da conta.
-func (a *Account) Saldo() float64 {
-	return a.balance
+func (b *Bank) Saldo(id uint) float64 {
+	acc, _ := b.repo.Ler(id)
+
+	return acc.balance
 }
 
 // Deposito incrementa o saldo com o valor depositado.
-func (a *Account) Deposito(valor float64) {
+func (b *Bank) Deposito(valor float64) {
 	a.balance += valor
 
 	op := Operation{
@@ -45,7 +52,7 @@ func (a *Account) Deposito(valor float64) {
 }
 
 // Saque decrementa o saldo no valor sacado
-func (a *Account) Saque(valor float64) {
+func (b *Bank) Saque(valor float64) {
 	a.balance -= valor
 
 	op := Operation{
@@ -57,7 +64,7 @@ func (a *Account) Saque(valor float64) {
 }
 
 // Extrato retorna as operacoes realizadas na conta.
-func (a *Account) Extrato() []Operation {
+func (b *Bank) Extrato() []Operation {
 	return a.operations
 }
 
