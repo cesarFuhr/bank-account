@@ -1,5 +1,7 @@
 package account
 
+import "fmt"
+
 const (
 	// OperationDeposito é o código da operacao deposito.
 	OperationDeposito = "DEPOSITO"
@@ -42,6 +44,7 @@ func (b *Bank) Saldo(id uint) float64 {
 // Deposito incrementa o saldo com o valor depositado.
 func (b *Bank) Deposito(valor float64) {
 	a.balance += valor
+	fmt.Println(a)
 
 	op := Operation{
 		Code:  OperationDeposito,
