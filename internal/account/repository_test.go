@@ -8,6 +8,8 @@ import (
 
 func TestLer(t *testing.T) {
 	repo := account.NewInMemoryRepository()
+	repo.Escrever(account.Account{})
+
 	t.Run("retorna os dados da conta solicitada", func(t *testing.T) {
 		want := uint(0)
 
