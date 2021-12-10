@@ -16,19 +16,23 @@ type Account struct {
 	operations []Operation
 }
 
+// LerEscritor permite ler e ecrever contas.
+type LerEscritor interface {
+	Ler(uint) (Account, error)
+	Escrever(Account) error
+}
+
 // Bank e um conjunto de contas.
 type Bank struct {
-	repo             *InMemoryRepository
+	repo             LerEscritor
 	numberOfAccounts uint
 }
 
 // NewBank cria um novo banco e retorna um ponteiro
 // para ele.
-func NewBank() *Bank {
-	repo := NewInMemoryRepository()
-
+func NewBank(repository LerEscritor) *Bank {
 	return &Bank{
-		repo:             repo,
+		repo:             repository,
 		numberOfAccounts: 0,
 	}
 }

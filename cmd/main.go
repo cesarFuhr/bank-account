@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/cesarFuhr/bank-account/internal/account"
+	"github.com/cesarFuhr/bank-account/internal/repository"
 )
 
 const (
@@ -22,7 +23,8 @@ func main() {
 	// saldo, deposito e saque de uma
 	// conta bancaria interagindo
 	// com o usuario.
-	bank := account.NewBank()
+	repo := repository.NewInMemoryRepository()
+	bank := account.NewBank(repo)
 
 	var sair bool
 	var contaAtual uint

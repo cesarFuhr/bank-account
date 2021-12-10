@@ -4,11 +4,13 @@ import (
 	"testing"
 
 	"github.com/cesarFuhr/bank-account/internal/account"
+	"github.com/cesarFuhr/bank-account/internal/repository"
 	"github.com/matryer/is"
 )
 
 func TestSaldo(t *testing.T) {
-	b := account.NewBank()
+	repo := repository.NewInMemoryRepository()
+	b := account.NewBank(repo)
 
 	is := is.NewRelaxed(t)
 
@@ -26,7 +28,8 @@ func TestSaldo(t *testing.T) {
 }
 
 func TestDeposito(t *testing.T) {
-	b := account.NewBank()
+	repo := repository.NewInMemoryRepository()
+	b := account.NewBank(repo)
 
 	is := is.NewRelaxed(t)
 
