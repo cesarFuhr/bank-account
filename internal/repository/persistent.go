@@ -5,6 +5,7 @@ import (
 	"encoding/gob"
 	"errors"
 	"fmt"
+	"io"
 	"strconv"
 
 	"github.com/boltdb/bolt"
@@ -49,13 +50,39 @@ func NewPersistentRepository() (*PersistentRepository, error) {
 	return &pr, nil
 }
 
-// Ler ...
+// Escrever escreve um registro de conta no banco de dados.
+func (r *PersistentRepository) Escrever(acc account.Account) error {
+	var buff bytes.Buffer
+	if err := gob.NewEncoder(&buff).Encode(&acc); err != nil {
+		return err
+	}
+
+	rawAcc, err := io.ReadAll(&buff)
+	if err != nil {
+		return err
+	}
+
+	id := strconv.Itoa(int(acc.ID))
+
+	err = r.db.Update(func(t *bolt.Tx) error {
+		b := t.Bucket([]byte(r.bucket))
+
+		return b.Put([]byte(id), rawAcc)
+	})
+	if err != nil {
+		return nil
+	}
+
+	return nil
+}
+
+// Ler le um registro de conta e retorna pelo ID.
 func (r *PersistentRepository) Ler(id uint) (account.Account, error) {
 	strID := strconv.Itoa(int(id))
 
 	var rawAcc []byte
-	r.db.View(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte(r.bucket))
+	r.db.View(func(t *bolt.Tx) error {
+		b := t.Bucket([]byte(r.bucket))
 		rawAcc = b.Get([]byte(strID))
 
 		return nil
@@ -65,6 +92,7 @@ func (r *PersistentRepository) Ler(id uint) (account.Account, error) {
 	}
 
 	buff := bytes.NewBuffer(rawAcc)
+
 	var acc account.Account
 	if err := gob.NewDecoder(buff).Decode(&acc); err != nil {
 		return account.Account{}, err
